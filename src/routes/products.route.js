@@ -4,22 +4,11 @@ import {
   createProductController,
   getAllProductsController,
   getProductByIdController,
+  updateProductByIdController,
 } from "../controllers/products.controller.js";
 import { upload } from "../config/multer.js";
 
 let productsRouter = Router();
-
-/**
- * @description Create a new product
- * @route POST /api/products
- * @access Private
- */
-productsRouter.post(
-  "/",
-  authMiddleware,
-  upload.array("images"),
-  createProductController,
-);
 
 /**
  * @description Get all products
@@ -34,5 +23,29 @@ productsRouter.get("/", getAllProductsController);
  * @access Public
  */
 productsRouter.get("/:id", getProductByIdController);
+
+/**
+ * @description Create a new product
+ * @route POST /api/products
+ * @access Private
+ */
+productsRouter.post(
+  "/",
+  authMiddleware,
+  upload.array("images"),
+  createProductController,
+);
+
+/**
+ * @description Update a product by id
+ * @route PATCH /api/products/:id
+ * @access Private
+ */
+productsRouter.patch(
+  "/:id",
+  authMiddleware,
+  upload.array("images"),
+  updateProductByIdController,
+);
 
 export default productsRouter;

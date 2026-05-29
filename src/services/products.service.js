@@ -1,6 +1,7 @@
 import apiError from "../utils/apiError.js";
 import sendFilesToImageKit from "../config/imagekit.js";
 import productModel from "../models/products.model.js";
+import mongoose from "mongoose";
 
 // service to create a new product
 export const createProductService = async (productData, userId, images) => {
@@ -51,9 +52,44 @@ export const getAllProductsService = async (category) => {
 
 // service to get a product by id
 export const getProductByIdService = async (id) => {
+  // check if the id is a valid mongoose object id
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid product id");
+  }
+  // find the product by id and populate the userId field with the name of the user
   let product = await productModel.findById(id).populate("userId", "name");
+  // check if the product is found
   if (!product) {
     throw new apiError(404, "Product not found");
   }
+  // return the product
+  return product;
+};
+
+// service to update a product by id
+export const updateProductByIdService = async (id, productData, images) => {
+  // check if the id is a valid mongoose object id
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid product id");
+  }
+
+  // send images to imagekit and get the image urls
+  let imageUrls = [];
+  for (let image of images) {
+    const uploaded = await sendFilesToImageKit(
+      image.buffer,
+      image.originalname,
+    );
+    imageUrls.push(uploaded.url);
+  }
+  // update the product data
+  productData.images = imageUrls;
+  // update the product by id
+  let product = await productModel.findByIdAndUpdate(id, productData);
+  // check if the product is found or not
+  if (!product) {
+    throw new apiError(404, "Product not found");
+  }
+  // return the product
   return product;
 };

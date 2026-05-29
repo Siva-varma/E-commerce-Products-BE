@@ -52,9 +52,7 @@ export const loginService = async (userData) => {
   if (!isPasswordCorrect) throw new apiError(401, "Invalid credentials");
 
   // create JWT token for the user
-  let token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
+  let token = existingUser.generateJWTToken();
 
   return { user: existingUser, token };
 };
