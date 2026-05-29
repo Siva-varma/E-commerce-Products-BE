@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: [true, "Category is required"],
+      default: "Others",
       trim: true,
     },
     images: {
@@ -31,10 +31,10 @@ const productSchema = new mongoose.Schema(
         message: "At least one image is required",
       },
     },
-    stock: {
-      type: Number,
-      required: [true, "Stock is required"],
-      min: [0, "Stock must be greater than 0"],
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: [true, "User is required"],
     },
   },
   { timestamps: true },
