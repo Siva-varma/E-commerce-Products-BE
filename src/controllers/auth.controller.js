@@ -1,5 +1,5 @@
 import asyncHandler from "../utils/asyncHandler.js";
-import { registerService } from "../services/auth.service.js";
+import { registerService, loginService } from "../services/auth.service.js";
 
 // controller to register a user
 export const registerController = asyncHandler(async (req, res, next) => {
@@ -18,5 +18,23 @@ export const registerController = asyncHandler(async (req, res, next) => {
     message: "User registered successfully",
     user: user,
     token: token,
+  });
+});
+
+// controller to login a user
+export const loginController = asyncHandler(async (req, res) => {
+  let userData = req.body;
+  // call the login service to login the user
+  let { user, token } = await loginService(userData);
+
+  // set token in cookie
+  res.cookie("token", token);
+
+  // send response to the client
+  res.status(201).json({
+    success: true,
+    message: "User logged in successfully",
+    user,
+    token,
   });
 });

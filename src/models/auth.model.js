@@ -1,30 +1,33 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Name is required"],
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    unique: [true, "Email already exists"],
-    trim: true,
-    lowercase: true,
-    validate: {
-      validator: function (email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: [true, "Email already exists"],
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator: function (email) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        },
+        message: "Invalid email address",
       },
-      message: "Invalid email address",
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
     },
   },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-  },
-});
+  { timestamps: true },
+);
 
 //hash password before saving to database
 userSchema.pre("save", async function () {
@@ -37,6 +40,11 @@ userSchema.pre("save", async function () {
     console.error("Error hashing password", error);
   }
 });
+
+//compare password with hashed password
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 const userModel = mongoose.model("user", userSchema);
 

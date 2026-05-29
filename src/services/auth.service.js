@@ -32,3 +32,29 @@ export const registerService = async (userData) => {
 
   return { user: newUser, token };
 };
+
+//service to login a user
+export const loginService = async (userData) => {
+  //check for all required fields
+  if (!userData.email || !userData.password) {
+    throw new apiError(404, "All fields are required");
+  }
+
+  //check if user already exists
+  let existingUser = await userModel.findOne({ email: userData.email });
+  if (!existingUser) {
+    throw new apiError(400, "User not found. please register first");
+  }
+
+  //compare password
+  let isPasswordCorrect = await existingUser.comparePassword(userData.password);
+
+  if (!isPasswordCorrect) throw new apiError(401, "Invalid credentials");
+
+  // create JWT token for the user
+  let token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+
+  return { user: existingUser, token };
+};
