@@ -3,6 +3,7 @@ import {
   getAllProductsService,
   getProductByIdService,
   updateProductByIdService,
+  deleteProductByIdService,
 } from "../services/products.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -62,5 +63,18 @@ export const updateProductByIdController = asyncHandler(async (req, res) => {
     success: true,
     message: "Product updated successfully",
     product: product,
+  });
+});
+
+// controller to delete a product by id
+export const deleteProductByIdController = asyncHandler(async (req, res) => {
+  // get the id from the request parameters
+  const { id } = req.params;
+  // delete product by id
+  let product = await deleteProductByIdService(id);
+  // send response to the client
+  res.status(200).json({
+    success: true,
+    message: "Product deleted successfully",
   });
 });

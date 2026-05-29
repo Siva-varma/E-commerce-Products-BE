@@ -93,3 +93,19 @@ export const updateProductByIdService = async (id, productData, images) => {
   // return the product
   return product;
 };
+
+// service to delete a product by id
+export const deleteProductByIdService = async (id) => {
+  // check if the id is a valid mongoose object id
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid product id");
+  }
+  // delete the product by id
+  let product = await productModel.findByIdAndDelete(id);
+  // check if the product is found or not
+  if (!product) {
+    throw new apiError(404, "Product not found");
+  }
+  // return the product
+  return product;
+};

@@ -5,6 +5,7 @@ import {
   getAllProductsController,
   getProductByIdController,
   updateProductByIdController,
+  deleteProductByIdController,
 } from "../controllers/products.controller.js";
 import { upload } from "../config/multer.js";
 
@@ -47,5 +48,12 @@ productsRouter.patch(
   upload.array("images"),
   updateProductByIdController,
 );
+
+/**
+ * @description Delete a product by id
+ * @route DELETE /api/products/:id
+ * @access Private
+ */
+productsRouter.delete("/:id", authMiddleware, deleteProductByIdController);
 
 export default productsRouter;
