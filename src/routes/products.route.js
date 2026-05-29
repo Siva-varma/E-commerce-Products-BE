@@ -3,6 +3,7 @@ import authMiddleware from "../middlewares/auth.middleware.js";
 import {
   createProductController,
   getAllProductsController,
+  getProductByIdController,
 } from "../controllers/products.controller.js";
 import { upload } from "../config/multer.js";
 
@@ -26,5 +27,12 @@ productsRouter.post(
  * @access Public
  */
 productsRouter.get("/", getAllProductsController);
+
+/**
+ * @description Get a product by id
+ * @route GET /api/products/:id
+ * @access Public
+ */
+productsRouter.get("/:id", getProductByIdController);
 
 export default productsRouter;

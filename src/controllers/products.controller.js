@@ -1,6 +1,7 @@
 import {
   createProductService,
   getAllProductsService,
+  getProductByIdService,
 } from "../services/products.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -25,5 +26,16 @@ export const getAllProductsController = asyncHandler(async (req, res) => {
     success: true,
     message: "Products fetched successfully",
     products: products,
+  });
+});
+
+// controller to get a product by id
+export const getProductByIdController = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  let product = await getProductByIdService(id);
+  res.status(200).json({
+    success: true,
+    message: "Product fetched successfully",
+    product: product,
   });
 });

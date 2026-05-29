@@ -48,3 +48,12 @@ export const getAllProductsService = async (category) => {
   let products = await productModel.find(query).populate("userId", "name");
   return products;
 };
+
+// service to get a product by id
+export const getProductByIdService = async (id) => {
+  let product = await productModel.findById(id).populate("userId", "name");
+  if (!product) {
+    throw new apiError(404, "Product not found");
+  }
+  return product;
+};
