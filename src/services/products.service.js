@@ -37,3 +37,14 @@ export const createProductService = async (productData, userId, images) => {
   });
   return product;
 };
+
+// service to get all products
+export const getAllProductsService = async (category) => {
+  let query = {};
+  if (category) {
+    query.category = category;
+  }
+  // find all products and populate the userId field with the name of the user
+  let products = await productModel.find(query).populate("userId", "name");
+  return products;
+};

@@ -18,8 +18,9 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      default: "Others",
+      default: "others",
       trim: true,
+      lowercase: true,
     },
     images: {
       type: [String],
@@ -34,7 +35,6 @@ const productSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-      required: [true, "User is required"],
     },
   },
   { timestamps: true },
